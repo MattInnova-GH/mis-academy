@@ -16,6 +16,8 @@ import {
   MdInsertDriveFile,
   MdSettings,
   MdNotifications,
+  MdBookOnline,
+  MdBookmark,
 } from "react-icons/md";
 import { apiUrl } from "../config/api";
 
@@ -35,6 +37,7 @@ import { Materiales } from "./materiales/tabla";
 import { Certificados } from "./certificados/tabla";
 import { Configuracion } from "./configuracion/page";
 import { Notificaciones } from "./notificaciones/page";
+import AdminReclamaciones from "./reclamos/page";
 
 export default function AdminLayout() {
   const [activeSection, setActiveSection] = useState<string | null>(null);
@@ -120,6 +123,8 @@ export default function AdminLayout() {
         return <Configuracion />;
       case "notificaciones":
         return <Notificaciones />;
+      case "reclamos":
+        return <AdminReclamaciones />;
       default:
         return <Dashboard />;
     }
@@ -217,6 +222,10 @@ export default function AdminLayout() {
               <MdInsertDriveFile size={20} /> Materiales
             </button>
           </Acordeon>
+
+          <button onClick={() => handleMenuClick("reclamos")} className={menuItemClass("reclamos")}>
+            <MdBookmark size={20} /> Reclamos
+          </button>
 
           <button onClick={() => handleMenuClick("notificaciones")} className={menuItemClass("notificaciones")}>
             <MdNotifications size={20} /> Notificaciones
