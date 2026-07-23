@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class LineaAcademica extends Model
 {
     protected $table = 'lineas_academicas';
-    protected $primaryKey = 'id_linea';
+    protected $primaryKey = 'id_linea_academica';
     public $timestamps = false;
     protected $fillable = [
         'nombre', 'descripcion', 'imagen', 'estado', 'fecha_creacion', 'fecha_actualizacion'

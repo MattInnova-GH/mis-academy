@@ -28,9 +28,9 @@ class CursoRepository implements CursoRepositoryInterface
         }
 
         // Filtro por estado
-if (!empty($filters['estado'])) {
-    $query->where('estado', $filters['estado']);
-}
+        if (!empty($filters['estado'])) {
+            $query->where('estado', $filters['estado']);
+        }
 
         // Filtro por precio mínimo
         if (!empty($filters['precio_min'])) {
@@ -55,8 +55,8 @@ if (!empty($filters['estado'])) {
         return Curso::with([
             'modulos.lecciones',
         ])->withCount('evaluaciones', 'resenas')
-        ->withAvg('resenas', 'calificacion')
-        ->findOrFail($id);
+            ->withAvg('resenas', 'calificacion')
+            ->findOrFail($id);
     }
 
     public function destacados($limit = 5)
@@ -73,5 +73,51 @@ if (!empty($filters['estado'])) {
     {
         return Curso::where('nombre', 'like', "%$query%")
             ->paginate($perPage);
+    }
+
+    public function destacadosPublicos($limit = 5)
+    {
+        return Cache::remember('cursos_destacados_publicos_' . $limit, 600, function () use ($limit) {
+            return Curso::where('destacado', true)
+                ->where('estado', 'Publicado')
+                ->select(['id_curso', 'nombre', 'slug', 'descripcion', 'nivel', 'precio', 'precio_descuento'])
+                ->orderByDesc('fecha_actualizacion')
+                ->limit($limit)
+                ->get();
+        });
+    }
+
+    public function buscarPublicos($query, $limit = 5)
+    {
+        return Curso::where('nombre', 'like', "%$query%")
+            ->where('estado', 'Publicado')
+            ->select(['id_curso', 'nombre', 'slug', 'descripcion', 'nivel', 'precio', 'precio_descuento', 'duracion'])
+            ->limit($limit)
+            ->get();
+    }
+
+    public function detallePublico($id)
+    {
+        return Curso::where('estado', 'Publicado')
+            ->select(['id_curso', 'nombre', 'slug', 'descripcion', 'descripcion_larga', 'objetivos', 'requisitos', 'nivel', 'precio', 'precio_descuento', 'duracion'])
+            ->with(['modulos' => function ($q) {
+                $q->select(['id_modulo', 'id_curso', 'titulo', 'orden']);
+            }, 'modulos.lecciones' => function ($q) {
+                $q->select(['id_leccion', 'id_modulo', 'titulo', 'duracion_minutos', 'es_gratuita', 'orden']);
+            }])
+            ->withAvg('resenas', 'calificacion')
+            ->where('id_curso', $id)
+            ->firstOrFail();
+    }
+
+    public function porLineaPublicos($idLineaAcademica, $limit = 10)
+    {
+        return Curso::where('estado', 'Publicado')
+            ->whereHas('rutas', function ($q) use ($idLineaAcademica) {
+                $q->where('id_linea_academica', $idLineaAcademica);
+            })
+            ->select(['id_curso', 'nombre', 'slug', 'descripcion', 'nivel', 'precio', 'precio_descuento'])
+            ->limit($limit)
+            ->get();
     }
 }

@@ -18,6 +18,8 @@ use App\Http\Controllers\EvaluacionController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\LeccionHeartbeatController;
 use App\Http\Controllers\LeccionAccesoController;
+use App\Http\Controllers\ChatbotController;
+
 Route::prefix('modulos')->group(function () {
     // Protegidos (gestión) - PRIMERO las rutas específicas
     Route::middleware('auth:sanctum')->group(function () {
@@ -423,3 +425,6 @@ Route::middleware(['auth:sanctum', EnsureAdmin::class])->group(function () {
     Route::get('/reclamaciones', [\App\Http\Controllers\ReclamacionController::class, 'index']);
     Route::put('/reclamaciones/{id}/responder', [\App\Http\Controllers\ReclamacionController::class, 'respond']);
 });
+
+Route::post('/chat', [ChatbotController::class, 'chat'])
+    ->middleware('throttle:30,1'); // 30 mensajes por minuto — evita abuso/spam al endpoint público

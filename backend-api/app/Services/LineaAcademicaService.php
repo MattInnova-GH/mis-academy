@@ -37,4 +37,8 @@ class LineaAcademicaService
     {
         return $this->lineaRepository->delete($id);
     }
+    public function lineasActivas($limit = 20)
+    {
+        return $this->lineaRepository->activas($limit);
+    }
 }

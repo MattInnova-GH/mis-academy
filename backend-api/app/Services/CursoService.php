@@ -32,4 +32,24 @@ class CursoService
     {
         return $this->cursoRepository->find($id);
     }
+
+    public function cursoDestacadosPublicos($limit = 5)
+    {
+        return $this->cursoRepository->destacadosPublicos($limit);
+    }
+
+    public function buscarCursosPublicos($query, $limit = 5)
+    {
+        return $this->cursoRepository->buscarPublicos($query, $limit);
+    }
+
+    public function detalleCursoPublico($id)
+    {
+        return $this->cursoRepository->detallePublico($id);
+    }
+
+    public function cursosPorLineaPublica($idLinea, $limit = 10)
+    {
+        return $this->cursoRepository->porLineaPublicos($idLinea, $limit);
+    }
 }

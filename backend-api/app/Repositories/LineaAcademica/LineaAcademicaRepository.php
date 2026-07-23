@@ -34,8 +34,16 @@ class LineaAcademicaRepository
 
     public function delete($id)
     {
-           $linea = LineaAcademica::findOrFail($id);
-           $linea->delete();
-           return true;
+        $linea = LineaAcademica::findOrFail($id);
+        $linea->delete();
+        return true;
+    }
+
+    public function activas($limit = 20)
+    {
+        return LineaAcademica::where('estado', 'Publicado')
+            ->select(['id_linea_academica', 'nombre', 'slug', 'descripcion'])
+            ->limit($limit)
+            ->get();
     }
 }

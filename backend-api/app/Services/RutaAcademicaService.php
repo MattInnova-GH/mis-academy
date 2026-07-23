@@ -47,4 +47,19 @@ class RutaAcademicaService
     {
         return $this->rutaRepository->delete($id);
     }
+
+    public function rutasDestacadasPublicas($limit = 5)
+    {
+        return $this->rutaRepository->destacadasPublicas($limit);
+    }
+
+    public function buscarRutasPublicas($query, $limit = 5)
+    {
+        return $this->rutaRepository->buscarPublicas($query, $limit);
+    }
+
+    public function rutasActivasPublicas($limit = 5)
+    {
+        return $this->rutaRepository->activasPublicas($limit);
+    }
 }
